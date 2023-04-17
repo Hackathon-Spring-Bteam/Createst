@@ -32,7 +32,7 @@ class User(AbstractUser):
         'auth.Permission',
         verbose_name='ユーザー権限',
         blank=True,
-        help_text='このユーザーに対する特定の権限。',
+        help_text='このユーザーに対する特定の権限',
         related_query_name="user",
         related_name="createst_user_set",
     )
