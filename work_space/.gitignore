@@ -3,3 +3,4 @@ mysql/*
 src/app/__pycache__/*
 static/*
 src/createst/__pycache__/*
+src/createst/migrations/*
