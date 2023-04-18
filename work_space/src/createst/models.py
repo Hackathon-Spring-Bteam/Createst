@@ -11,14 +11,20 @@ class LabelModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class TestModel(models.Model):
+    #2択か4択のどちらかを保存
+    FORMAT_CHOICES = (
+        (2, '2択問題'),
+        (4, '4択問題'),
+    )
     test_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     test_title = models.CharField(max_length=50)
-    test_format = models.CharField(max_length=50)
+    test_format = models.IntegerField(choices=FORMAT_CHOICES)
     test_keyword = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     public_key = models.BooleanField(default=True)
     label = models.ForeignKey(LabelModel, on_delete=models.CASCADE)
+
 
 class ProblemModel(models.Model):
     problem_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
