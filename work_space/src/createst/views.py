@@ -3,25 +3,31 @@ from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, SignupForm, CustomForm
-from .models import Test
+from .models import TestModel
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django.views.generic.edit import CreateView
+
 
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
         form = CustomForm()
-        return render(request, 'form_template.html', {'form': form})
+        return render(request, 'index.html', {'form': form})
 
-    def post(self, request):
-        form = CustomForm(request.POST)
-        if form.is_valid():
-            title = form.cleaned_data['title']
-            keyword = form.cleaned_data['keyword']
-            radio_choice = form.cleaned_data['radio_choice']
-            test = Test(title=title, keyword=keyword, radio_choice=radio_choice, user=request.user)
-            test.save()
-            return HttpResponseRedirect('/index/')
-        return render(request, 'form_template.html', {'form': form})
+#テストをリクエストするフォーム
+class TestView(LoginRequiredMixin, CreateView):
+    model = TestModel #追記
+    template_name = 'test_form.html'     
+    # form = CustomForm
+    fields = ['test_title', 'test_format', 'test_keyword', 'label']
+    success_url = '/index/'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user #追記
+        test = form.save()
+        test.user = self.request.user
+        test.save()
+        return HttpResponseRedirect(self.success_url)
 
 class LoginView(View):
     def get(self, request):
