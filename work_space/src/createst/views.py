@@ -2,27 +2,32 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, SignupForm, CustomForm
-from .models import Test
+from .forms import LoginForm, SignupForm, TestModelForm
+from .models import TestModel
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django.views.generic.edit import CreateView
 
+#Index.html
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
-        form = CustomForm()
-        return render(request, 'form_template.html', {'form': form})
+        return render(request, 'index.html')
 
-    def post(self, request):
-        form = CustomForm(request.POST)
-        if form.is_valid():
-            title = form.cleaned_data['title']
-            keyword = form.cleaned_data['keyword']
-            radio_choice = form.cleaned_data['radio_choice']
-            test = Test(title=title, keyword=keyword, radio_choice=radio_choice, user=request.user)
-            test.save()
-            return HttpResponseRedirect('/index/')
-        return render(request, 'form_template.html', {'form': form})
+#テストをリクエストするフォーム & 送信でindexに遷移
+class TestView(LoginRequiredMixin, CreateView):
+    model = TestModel
+    template_name = 'test_form.html'
+    form_class = TestModelForm
+    success_url = '/index/'
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        test = form.save()
+        test.user = self.request.user
+        test.save()
+        return HttpResponseRedirect(self.success_url)
+
+#login.html
 class LoginView(View):
     def get(self, request):
         form = LoginForm()
@@ -37,6 +42,7 @@ class LoginView(View):
                 return HttpResponseRedirect(reverse('index'))
         return render(request, 'login.html', {'form': form})
 
+#Signup.html
 class SignupView(View):
     def get(self, request):
         form = SignupForm()
@@ -49,6 +55,7 @@ class SignupView(View):
             return HttpResponseRedirect(reverse('login'))
         return render(request, 'signup.html', {'form': form})
 
+#logout機能
 class LogoutView(View):
     pass
 
