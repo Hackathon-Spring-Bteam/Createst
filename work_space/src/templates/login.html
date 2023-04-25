@@ -1,9 +1,25 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}" />
+{% endblock %} 
 {% block content %}
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">ログイン</button>
-  </form>
+{% include "header.html" %}
+<div class="brackbord">
+<div class="content">
+<img class="login" src="{% static 'img/login.png' %}">
+
+<h2 id="username">ユーザー名</h2>
+
+<h2 id="password">パスワード</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">ログイン</button>
+</form>
+<a href="{% url 'signup' %}" class="signup">アカウント作成</a>
+</div>
+</div>
+    <img id="footer" src="{% static 'img/chalk_rail.png' %}">
 {% endblock %}

@@ -1,0 +1,202 @@
+body {
+  background-color: #365835;
+  color: #666666;
+}
+#footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+.content {
+  position: relative;
+  left: 25%;
+  width: 50%;
+  top: 30px;
+  height: 420px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 3%;
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.4);
+}
+.helptext {
+  font-size: 0px;
+}
+
+ul {
+  font-size: 0px;
+}
+
+label {
+  font-size: 0px;
+}
+
+.signup {
+  width: 200px;
+  height: 35px;
+  left: 181px;
+  top: 106px;
+}
+
+input {
+  border: none;
+  border-bottom: 1px solid black;
+  outline: none;
+}
+h2 {
+  font-family: 'Piazzolla';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  text-align: center;
+}
+
+#username {
+  position: absolute;
+  width: 350px;
+  height: 23px;
+  left: 0px;
+  top: 130px;
+
+  font-family: 'Piazzolla';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 23px;
+  /* ボックスの高さと同一 */
+
+
+  color: #666666;
+}
+
+#email {
+  position: absolute;
+  width: 350px;
+  height: 23px;
+  left: 0px;
+  top: 180px;
+
+  font-family: 'Piazzolla';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 23px;
+  /* ボックスの高さと同一 */
+
+
+  color: #666666;
+}
+
+#password {
+  position: absolute;
+  width: 350px;
+  height: 23px;
+  left: 0px;
+  top: 230px;
+
+  font-family: 'Piazzolla';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 23px;
+  /* ボックスの高さと同一 */
+
+
+  color: #666666;
+}
+
+#repassword {
+  position: absolute;
+  width: 350px;
+  height: 23px;
+  left: 0px;
+  top: 280px;
+
+  font-family: 'Piazzolla';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 23px;
+  /* ボックスの高さと同一 */
+
+
+  color: #666666;
+}
+
+#id_username {
+  position: absolute;
+  width: 250px;
+  height: 23px;
+  left: 300px;
+  top: 130px;
+
+  font-family: 'Piazzolla';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 23px;
+  color: #666666;
+}
+
+#id_email {
+  position: absolute;
+  width: 250px;
+  height: 23px;
+  left: 300px;
+  top: 180px;
+
+  font-family: 'Piazzolla';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 23px;
+  color: #666666;
+}
+
+#id_password1 {
+  position: absolute;
+  width: 250px;
+  height: 23px;
+  left: 300px;
+  top: 230px;
+
+  font-family: 'Piazzolla';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 23px;
+  color: #666666;
+}
+
+#id_password2 {
+  position: absolute;
+  width: 250px;
+  height: 23px;
+  left: 300px;
+  top: 280px;
+
+  font-family: 'Piazzolla';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 23px;
+  color: #666666;
+}
+input[type="submit"] {
+  box-sizing: border-box;
+  position: absolute;
+  width: 400px;
+  height: 40px;
+  left: 110px;
+  top: 350px;
+  border: 1px solid #365835;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 24px;
+
+  font-weight: 700;
+  color: #365835;
+}
+input[type="submit"]:hover{
+  color: white;
+  background-color: #365835;
+}
