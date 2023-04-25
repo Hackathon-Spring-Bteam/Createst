@@ -1,10 +1,23 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+{% endblock %} 
 {% block content %}
-<h1>ユーザー登録</h1>
+{% include "header.html" %}
+<div class="brackbord">
+<div class="content">
+<img class="signup" src="{% static 'img/signup.png' %}">
+<h2 id="username">ユーザー名</h2>
+<h2 id="email">メールアドレス</h2>
+<h2 id="password">パスワード</h2>
+<h2 id="repassword">(確認)パスワード</h2>
 <form action="{% url 'signup' %}" method="post">
 {% csrf_token %}
     {{ form.as_p }}
     <p><input type="submit" value="登録"></p>
 </form>
+</div>
+</div>
+    <img id="footer" src="{% static 'img/chalk_rail.png' %}">
 {% endblock %}
