@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/usernameup.css' %}" />
+{% endblock %} 
+{% block content %}
+{% include "header.html" %}
+<div class="brackbord">
+    <div class="content">
+        <img class="username" src="{% static 'img/username.png' %}">
+        <h2 id="name">現在のユーザー名</h3>
+        <h2 id="new_name">新しいユーザー名</h3>
+        <h2 id="password">パスワード</h3>
+        <p id="id_username">{{user.username}}</p>
+        <form action="{% url 'nameup' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div id="username">
+                <button id="confirmation-btn" type="submit">変更</button>
+            </div>
+        </form>
+    </div>
+</div>
+    <img id="footer" src="{% static 'img/chalk_rail.png' %}">
+{% endblock %}
+
+ 

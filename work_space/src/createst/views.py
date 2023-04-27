@@ -2,11 +2,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, SignupForm, TestModelForm
+from .forms import LoginForm, SignupForm, TestModelForm,ChangeUsernameForm
 from .models import TestModel
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView
+
+from django.contrib import messages
 
 #Index.html
 class IndexView(LoginRequiredMixin, View):
@@ -64,3 +66,21 @@ class UserView(View):
 
 class OtherView(View):
     pass
+
+class ChangeUsernameView(LoginRequiredMixin, View):
+    form_class = ChangeUsernameForm
+    template_name = 'usernameup.html'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(user_id=request.user.id)
+        context = {'form': form}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(user_id=request.user.id, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'アカウント名を変更しました。')
+            return redirect('/index/')
+        context = {'form': form}
+        return render(request, self.template_name, context)
