@@ -2,11 +2,13 @@ body {
   background-color: #365835;
   color: #666666;
 }
+
 #footer {
   position: fixed;
   bottom: 0;
   width: 100%;
 }
+
 .content {
   position: relative;
   width: 700px;
@@ -18,25 +20,12 @@ body {
   border-radius: 10px;
   padding: 3%;
 }
-.helptext {
-  font-size: 0px;
-}
-
-ul {
-  font-size: 0px;
-}
-
-label {
-  font-size: 0px;
-}
-
-.signup {
-  width: 200px;
+.email {
+  width: 150px;
   height: 35px;
   left: 181px;
   top: 106px;
 }
-
 input {
   border: none;
   border-bottom: 1px solid black;
@@ -49,8 +38,7 @@ h2 {
   font-size: 24px;
   text-align: center;
 }
-
-#username {
+#now_email {
   position: absolute;
   width: 350px;
   height: 23px;
@@ -64,11 +52,11 @@ h2 {
   line-height: 23px;
   /* ボックスの高さと同一 */
 
-
+  
   color: #666666;
 }
 
-#email {
+#new_email {
   position: absolute;
   width: 350px;
   height: 23px;
@@ -82,7 +70,7 @@ h2 {
   line-height: 23px;
   /* ボックスの高さと同一 */
 
-
+  
   color: #666666;
 }
 
@@ -99,30 +87,11 @@ h2 {
   font-size: 21px;
   line-height: 23px;
   /* ボックスの高さと同一 */
-
-
-  color: #666666;
-}
-
-#repassword {
-  position: absolute;
-  width: 350px;
-  height: 23px;
-  left: 0px;
-  top: 280px;
-
-  font-family: 'Piazzolla';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 21px;
-  line-height: 23px;
-  /* ボックスの高さと同一 */
-
+  
 
   color: #666666;
 }
-
-#id_username {
+#id_current_email {
   position: absolute;
   width: 250px;
   height: 23px;
@@ -137,7 +106,7 @@ h2 {
   color: #666666;
 }
 
-#id_email {
+#id_new_email {
   position: absolute;
   width: 250px;
   height: 23px;
@@ -152,7 +121,7 @@ h2 {
   color: #666666;
 }
 
-#id_password1 {
+#id_password {
   position: absolute;
   width: 250px;
   height: 23px;
@@ -167,36 +136,22 @@ h2 {
   color: #666666;
 }
 
-#id_password2 {
-  position: absolute;
-  width: 250px;
-  height: 23px;
-  left: 300px;
-  top: 280px;
-
-  font-family: 'Piazzolla';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 21px;
-  line-height: 23px;
-  color: #666666;
-}
-input[type="submit"] {
+button[type="submit"] {
   box-sizing: border-box;
-  position: absolute;
+  position: relative;
   width: 400px;
   height: 40px;
-  left: 150px;
-  top: 350px;
+  left: 110px;
+  top: 250px;
   border: 1px solid #365835;
   border-radius: 20px;
   text-align: center;
   font-size: 24px;
-
   font-weight: 700;
   color: #365835;
+  margin:  0 auto;  
 }
-input[type="submit"]:hover{
+button[type="submit"]:hover {
   color: white;
   background-color: #365835;
 }

@@ -11,8 +11,8 @@ body {
 
 .content {
   position: relative;
-  left: 25%;
-  width: 50%;
+  width: 700px;
+  margin:  0 auto;            /* 中央寄せ */
   top: 30px;
   height: 420px;
   background-color: white;
@@ -141,7 +141,7 @@ button[type="submit"] {
   position: absolute;
   width: 400px;
   height: 40px;
-  left: 110px;
+  left: 150px;
   top: 300px;
   border: 1px solid #365835;
   border-radius: 20px;

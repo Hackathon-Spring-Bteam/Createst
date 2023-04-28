@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/modal.css' %}" />
+<link rel="stylesheet" href="{% static 'css/email.css' %}" />
+{% endblock %}
+{% block content %}
+{% include "header.html" %}
+<div class="content">
+  <img class="email" src="{% static 'img/e-mail.png' %}">
+    <h2 id="now_email">現在のメールアドレス</h3>
+    <h2 id="new_email">新しいメールアドレス</h3>
+    <h2 id="password">パスワード</h3>
+<form action="{% url 'emailup' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div id="email">
+        <button id="confirmation-btn" type="submit">変更</button>
+    </div>
+
+</form>
+</div>
+
+{% endblock content %}

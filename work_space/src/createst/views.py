@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, SignupForm, TestModelForm,ChangeUsernameForm
+from .forms import LoginForm, SignupForm, TestModelForm,ChangeUsernameForm,ChangeEmailForm
 from .models import TestModel
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -84,3 +84,18 @@ class ChangeUsernameView(LoginRequiredMixin, View):
             return redirect('/index/')
         context = {'form': form}
         return render(request, self.template_name, context)
+    
+class ChangeEmailView(LoginRequiredMixin, View):
+    form_class = ChangeEmailForm
+    template_name = 'Emailup.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'form': self.form_class(user_id=request.user.id)})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(user_id=request.user.id, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'メールアドレスを変更しました。')
+            return redirect('/home/')
+        return render(request, self.template_name, {'form': form})
