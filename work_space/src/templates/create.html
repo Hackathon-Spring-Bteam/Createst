@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Create a Test</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Test</button>
+  </form>
+  {% if response_text %}
+    <div class="response-text">
+        <h3>ChatGPT Response:</h3>
+        <pre>{{ response_text }}</pre>
+    </div>
+  {% endif %}
+{% endblock %}
