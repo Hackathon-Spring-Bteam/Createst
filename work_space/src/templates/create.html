@@ -1,12 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Create a Test</h1>
-  <form method="post">
+<h2>テストを作成</h2>
+<form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Create Test</button>
-  </form>
+    <input type="hidden" name="form_type" value="test_form">
+    <button type="submit">作成</button>
+</form>
+
+<h2>ラベルを追加</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ label_form.as_p }}
+    <input type="hidden" name="form_type" value="label_form">
+    <button type="submit">追加</button>
+</form>
+
+
   {% if response_text %}
     <div class="response-text">
         <h3>ChatGPT Response:</h3>
