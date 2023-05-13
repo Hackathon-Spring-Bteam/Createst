@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, SignupForm, TestModelForm,ChangeUsernameForm,ChangeEmailForm,ChangePasswordForm
 from .models import TestModel
-from .forms import LoginForm, SignupForm, TestModelForm
+from .forms import LoginForm, SignupForm, TestModelForm, LabelForm
 from .models import TestModel, ProblemModel, ChoiceModel, LabelModel
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -21,7 +21,7 @@ class IndexView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "index.html")
     
-openai.api_key = "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"
+openai.api_key = "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"
 
 # テストを生成するview
 class CreateTestView(LoginRequiredMixin, TemplateView):
@@ -58,7 +58,7 @@ class CreateTestView(LoginRequiredMixin, TemplateView):
         
         #難易度をfor文で回してdifficultyに入れる
         for difficulty in difficulties[:5]:
-            chat_input = f"Crt {test.test_format}-ch qz qstn kwd: {test.test_keyword}. Qz dfclty: {difficulty}. Outpt: indntd JSON. Incld crct ans in chcs 'a'-'d'. 'ans' is crct ans, 'a'-'d' are chcs. If 2-ch quiz, gnt 'problem_statement', 'answer', 'choices_a', and 'choices_b' in indntd JSON. If 4-ch quiz, gnt 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' in indntd JSON. Gnt prblm reltd to kwd: {test.test_keyword}. Chcs 'a'-'d' no ovrlp. No ez or inacc prblms."
+            chat_input = f"Generate a {test.test_format}-choice quiz question related to the keyword: {test.test_keyword}. The difficulty of the quiz should be: {difficulty}. Please provide the output in indented JSON format. Please include the correct answer among the 'choices_a' to 'choices_d'. generate 'answer' as the actual choice text, not as 'a'-'d'. If it is a 2-choice quiz, generate 'problem_statement', 'answer', 'choices_a', and 'choices_b' in the indented JSON. If it is a 4-choice quiz, generate 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' in the indented JSON. Ensure that the choices do not overlap and the problem is neither too easy nor inaccurate."
             
             #APIの設定
             response = openai.ChatCompletion.create(
@@ -114,6 +114,18 @@ class ShowQuizView(LoginRequiredMixin, View):
         #debug用
         response_text = request.session.get('response_text', None)
         return render(request, "test.html", {"problem_choices": problem_choices, "response_text": response_text}) #response_textはdebug用
+
+    #ユーザーの答えをDBに保存するコード
+    def post(self, request, *args, **kwargs):
+        for key, value in request.POST.items():
+            if key.startswith('user_answer_'):
+                problem_id_key = 'problem_id_' + key.split('_')[-1]
+                if problem_id_key in request.POST:
+                    problem_id = request.POST[problem_id_key]
+                    problem = ProblemModel.objects.get(problem_id=problem_id)
+                    problem.user_answer = value
+                    problem.save()
+        return redirect('index')
             
 # login.html
 class LoginView(View):
