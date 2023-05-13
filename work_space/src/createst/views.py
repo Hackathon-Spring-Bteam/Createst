@@ -2,10 +2,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, SignupForm, TestModelForm,ChangeUsernameForm,ChangeEmailForm
+from .forms import LoginForm, SignupForm, TestModelForm, ChangeUsernameForm, ChangeEmailForm, LabelForm
 from .models import TestModel
 from .forms import LoginForm, SignupForm, TestModelForm
-from .models import TestModel, ProblemModel, ChoiceModel
+from .models import TestModel, ProblemModel, ChoiceModel, LabelModel
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView
@@ -21,7 +21,7 @@ class IndexView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "index.html")
     
-openai.api_key = "API_KEY"
+openai.api_key = "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"
 
 # テストを生成するview
 class CreateTestView(LoginRequiredMixin, TemplateView):
@@ -29,62 +29,77 @@ class CreateTestView(LoginRequiredMixin, TemplateView):
 
     def get(self, request):
         form = TestModelForm()
-        return render(request, "create.html", {"form": form})
-
+        label_form = LabelForm()
+        return render(request, "create.html", {"form": form, "label_form": label_form})
+    
     def post(self, request):
-        form = TestModelForm(request.POST)
-        if form.is_valid():
-            test = form.save(commit=False)
-            test.user = request.user
-            test.save()
+        #フォームを処理
+        form_type = request.POST.get('form_type')
+
+        #formのvalueが'label_form'の場合ラベルを追加する処理
+        if form_type == 'label_form':
+            form = LabelForm(request.POST)
+            if form.is_valid():
+                label = form.save(commit=False)
+                label.user = request.user
+                label.save()
+                return redirect('create')
             
-            #難易度のリスト
-            difficulties = ["easy", "normal", "hard", "super_hard", "brainteaser"]
+        #formのvalueが'test_form'の場合、テストを生成する処理
+        elif form_type == 'test_form':
+            form = TestModelForm(request.POST)
+            if form.is_valid():
+                test = form.save(commit=False)
+                test.user = request.user
+                test.save()
             
-            #難易度をfor文で回してdifficultyに入れる
-            for difficulty in difficulties[:3]:
-                chat_input = f"Crt {test.test_format}-ch qz qstn kwd: {test.test_keyword}. Qz dfclty: {difficulty}. Outpt: indntd JSON. NO excpt JSON. Incld crct ans in chcs 'a'-'d'. 'ans' is crct ans, 'a'-'d' are chcs. 'problem_statement', 'answer', 'choices_a', and 'choices_b' is for 2-ch qz. 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' is for 4-ch qz.Gnt prblm reltd to kwd: {test.test_keyword}. Chcs 'a'-'d' no ovrlp. No ez or inacc prblms."
-                
-                #APIの設定
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": chat_input}
-                    ],
-                    max_tokens=500,
-                    n=1,
-                    temperature=0.3,
-                )
-                #APIからのリスポンスを解析
-                response_text = response['choices'][0]['message']['content'].strip()
-                
-                #うまくJSONを取得できなかった時の例外処理
-                try:
-                    response_json = json.loads(response_text)
-                except json.JSONDecodeError:
-                    messages.error(request, f'エラーが発生しました。キーワードを正確に入力してください。Response: {response_text}')
-                    return render(request, "create.html", {"form": form, "response_text": response_text})
-                
-                #以下DBに保存するコード
-                problem_statement = response_json["problem_statement"]
-                correct_answer = response_json["answer"]
-                choices_a = response_json["choices_a"]
-                choices_b = response_json["choices_b"]
+        #難易度のリスト
+        difficulties = ["easy", "normal", "hard", "super_hard", "brainteaser"]
+        
+        #難易度をfor文で回してdifficultyに入れる
+        for difficulty in difficulties[:5]:
+            chat_input = f"Crt {test.test_format}-ch qz qstn kwd: {test.test_keyword}. Qz dfclty: {difficulty}. Outpt: indntd JSON. Incld crct ans in chcs 'a'-'d'. 'ans' is crct ans, 'a'-'d' are chcs. If 2-ch quiz, gnt 'problem_statement', 'answer', 'choices_a', and 'choices_b' in indntd JSON. If 4-ch quiz, gnt 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' in indntd JSON. Gnt prblm reltd to kwd: {test.test_keyword}. Chcs 'a'-'d' no ovrlp. No ez or inacc prblms."
+            
+            #APIの設定
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": chat_input}
+                ],
+                max_tokens=500,
+                n=1,
+                temperature=0.3,
+            )
+            #APIからのリスポンスを解析
+            response_text = response['choices'][0]['message']['content'].strip()
+            
+            #うまくJSONを取得できなかった時の例外処理
+            try:
+                response_json = json.loads(response_text)
+            except json.JSONDecodeError:
+                messages.error(request, f'エラーが発生しました。キーワードを正確に入力してください。Response: {response_text}')
+                return render(request, "create.html", {"form": form, "response_text": response_text})
+            
+            #以下DBに保存するコード
+            problem_statement = response_json["problem_statement"]
+            correct_answer = response_json["answer"]
+            choices_a = response_json["choices_a"]
+            choices_b = response_json["choices_b"]
 
-                problem = ProblemModel.objects.create(problem_statement=problem_statement, correct_answer=correct_answer, test=test)
-                ChoiceModel.objects.create(choice=choices_a, problem=problem)
-                ChoiceModel.objects.create(choice=choices_b, problem=problem)
+            problem = ProblemModel.objects.create(problem_statement=problem_statement, correct_answer=correct_answer, test=test)
+            ChoiceModel.objects.create(choice=choices_a, problem=problem)
+            ChoiceModel.objects.create(choice=choices_b, problem=problem)
 
-                if test.test_format == 4:
-                    choices_c = response_json["choices_c"]
-                    choices_d = response_json["choices_d"]
-                    ChoiceModel.objects.create(choice=choices_c, problem=problem)
-                    ChoiceModel.objects.create(choice=choices_d, problem=problem)
+            if test.test_format == 4:
+                choices_c = response_json["choices_c"]
+                choices_d = response_json["choices_d"]
+                ChoiceModel.objects.create(choice=choices_c, problem=problem)
+                ChoiceModel.objects.create(choice=choices_d, problem=problem)
 
-                # debug用に一時的にresponseを保存
-                request.session['response_text'] = response_text
+            # debug用に一時的にresponseを保存
+            request.session['response_text'] = response_text
 
-            return redirect('test', test_id=test.test_id)
+        return redirect('test', test_id=test.test_id)
 
 #生成したTESTを表示するview
 class ShowQuizView(LoginRequiredMixin, View):
@@ -99,7 +114,7 @@ class ShowQuizView(LoginRequiredMixin, View):
         #debug用
         response_text = request.session.get('response_text', None)
         return render(request, "test.html", {"problem_choices": problem_choices, "response_text": response_text}) #response_textはdebug用
-
+            
 # login.html
 class LoginView(View):
     def get(self, request):

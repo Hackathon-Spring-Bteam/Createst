@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% for problem, choices in problem_choices %}
-    <h2>{{ problem.problem_statement }}</h2>
-    <form method="post">
-      {% csrf_token %}
+  <form method="post">
+    {% csrf_token %}
+    {% for problem, choices in problem_choices %}
+      <h2>{{ problem.problem_statement }}</h2>
       <div>
         {% for choice in choices %}
           <div>
-            <input type="radio" name="user_answer" id="choice_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" value="{{ choice.choice }}" required>
+            <input type="radio" name="user_answer_{{ forloop.parentloop.counter }}" id="choice_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" value="{{ choice.choice }}" required>
             <label for="choice_{{ forloop.parentloop.counter }}_{{ forloop.counter }}">{{ choice.choice }}</label>
           </div>
         {% endfor %}

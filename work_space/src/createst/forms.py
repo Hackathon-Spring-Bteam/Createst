@@ -33,6 +33,12 @@ class TestModelForm(forms.ModelForm):
         super(TestModelForm, self).__init__(*args, **kwargs)
         self.fields['label'].queryset = LabelModel.objects.all()
         self.fields['label'].label_from_instance = lambda obj: f"{obj.label_name}"
+ 
+#Labelの追加form       
+class LabelForm(forms.ModelForm):
+    class Meta:
+        model = LabelModel
+        fields = ('label_name',) 
 
 class LoginForm(AuthenticationForm):
     # ログインフォーム
