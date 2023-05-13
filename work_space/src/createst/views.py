@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, SignupForm, TestModelForm, ChangeUsernameForm, ChangeEmailForm, LabelForm
+from .forms import LoginForm, SignupForm, TestModelForm,ChangeUsernameForm,ChangeEmailForm,ChangePasswordForm
 from .models import TestModel
 from .forms import LoginForm, SignupForm, TestModelForm
 from .models import TestModel, ProblemModel, ChoiceModel, LabelModel
@@ -183,5 +183,29 @@ class ChangeEmailView(LoginRequiredMixin, View):
         if form.is_valid():
             form.save()
             messages.success(request, 'メールアドレスを変更しました。')
-            return redirect('/home/')
+            return redirect('/index/')
+        return render(request, self.template_name, {'form': form})
+    
+class ChangePasswordView(LoginRequiredMixin,View):
+    template_name = 'passwordup.html'
+    form_class = ChangePasswordForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(request.user.id)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.user.id, data=request.POST)
+        if form.is_valid():
+            # 新しいパスワードをセットする
+            user = request.user
+            user.set_password(form.cleaned_data['new_password'])
+            user.save()
+            # ユーザーを再認証してログインする
+            user = authenticate(username=user.username, password=form.cleaned_data['new_password'])
+            if user is not None:
+                login(request, user)
+
+            messages.success(request, 'パスワードを変更しました。')
+            return redirect('/index/')
         return render(request, self.template_name, {'form': form})
