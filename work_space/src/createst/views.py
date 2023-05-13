@@ -20,8 +20,9 @@ import time
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "index.html")
-    
-openai.api_key = "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"
+
+#プッシュする際はAPI KEYを必ず空にすること
+openai.api_key = ''
 
 # テストを生成するview
 class CreateTestView(LoginRequiredMixin, TemplateView):
