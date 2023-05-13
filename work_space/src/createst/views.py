@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, SignupForm, TestModelForm,ChangeUsernameForm,ChangeEmailForm
+from .forms import LoginForm, SignupForm, TestModelForm,ChangeUsernameForm,ChangeEmailForm,ChangePasswordForm
 from .models import TestModel
 from .forms import LoginForm, SignupForm, TestModelForm
 from .models import TestModel, ProblemModel, ChoiceModel, LabelModel
