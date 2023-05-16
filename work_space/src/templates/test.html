@@ -18,4 +18,8 @@
   {% endfor %}
   <button type="submit">回答</button>
 </form>
+<form method="post">
+  {% csrf_token %}
+  <input type="submit" name="regenerate" value="再生成">
+</form>
 {% endblock %}
