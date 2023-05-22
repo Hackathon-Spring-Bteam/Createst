@@ -15,7 +15,6 @@ import json
 from django.contrib import messages
 import time
 
-#Index.html
 # Index.html
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
@@ -55,13 +54,11 @@ class CreateTestView(LoginRequiredMixin, TemplateView):
                 test.save()
             
         #難易度のリスト
-        difficulties = ["easy", "normal", "hard", "super_hard", "brainteaser"]
+        difficulties = ["really hard", "normal", "hard", "easy", "brainteaser"]
         
         #難易度をfor文で回してdifficultyに入れる
         for difficulty in difficulties[:1]:
-            chat_input = f"Generate a {test.test_format}-choice quiz question related to the keyword: {test.test_keyword}. The difficulty of the quiz should be: {difficulty}. Please provide the output in indented JSON format. Please include the correct answer among the 'choices_a' to 'choices_d'. generate 'answer' as the actual choice text, not as 'a'-'d'. If it is a 2-choice quiz, generate 'problem_statement', 'answer', 'choices_a', and 'choices_b' in the indented JSON. If it is a 4-choice quiz, generate 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' in the indented JSON. Ensure that the choices do not overlap and the problem is neither too easy nor inaccurate."
-            
-            #APIの設定
+            chat_input = f"Generate a {test.test_format}-choice quiz question in 日本語 about the keyword: {test.test_keyword}. The quiz should be academically challenging and difficulty: {difficulties}, avoid simple 'What is ~?' type questions. Please provide the output in indented JSON format. Include the correct answer among the 'choices_a' to 'choices_d' and specify 'answer' as the actual choice text, not as 'a'-'d'. For a 2-choice quiz, generate 'problem_statement', 'answer', 'choices_a', and 'choices_b' in the indented JSON. For a 4-choice quiz, generate 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' in the indented JSON."
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
@@ -69,7 +66,7 @@ class CreateTestView(LoginRequiredMixin, TemplateView):
                 ],
                 max_tokens=500,
                 n=1,
-                temperature=0.3,
+                temperature=0.2,
             )
             #APIからのリスポンスを解析
             response_text = response['choices'][0]['message']['content'].strip()
@@ -128,8 +125,8 @@ class ShowQuizView(LoginRequiredMixin, View):
             difficulties = ["easy", "normal", "hard", "super_hard", "brainteaser"]
             
             #難易度をfor文で回してdifficultyに入れる
-            for difficulty in difficulties[:1]:
-                chat_input = f"Generate a {new_test.test_format}-choice quiz question related to the keyword: {new_test.test_keyword}. The difficulty of the quiz should be: {difficulty}. Please provide the output in indented JSON format. Please include the correct answer among the 'choices_a' to 'choices_d'. generate 'answer' as the actual choice text, not as 'a'-'d'. If it is a 2-choice quiz, generate 'problem_statement', 'answer', 'choices_a', and 'choices_b' in the indented JSON. If it is a 4-choice quiz, generate 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' in the indented JSON. Ensure that the choices do not overlap and the problem is neither too easy nor inaccurate."
+            for difficulty in difficulties[:2]:
+                chat_input = f"Generate a {new_test.test_format}-choice quiz question in 日本語 about the keyword: {new_test.test_keyword}. The quiz should be academically challenging and difficulty: {difficulties}, avoid simple 'What is ~?' type questions. Please provide the output in indented JSON format. Include the correct answer among the 'choices_a' to 'choices_d' and specify 'answer' as the actual choice text, not as 'a'-'d'. For a 2-choice quiz, generate 'problem_statement', 'answer', 'choices_a', and 'choices_b' in the indented JSON. For a 4-choice quiz, generate 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' in the indented JSON."
                 
                 #APIの設定
                 response = openai.ChatCompletion.create(
@@ -170,8 +167,8 @@ class ShowQuizView(LoginRequiredMixin, View):
             # 新しいtest_idのページに遷移
             return redirect('test', test_id=new_test.test_id)
         
-        # 再生成が選択されなかったときにユーザーの回答をDBに保存
-        else:  
+        # 再生成が選択されなかったときにユーザーの回答をDBに保存 & 得点を記録
+        else:
             for key, value in request.POST.items():
                 if key.startswith('user_answer_'):
                     problem_id_key = 'problem_id_' + key.split('_')[-1]
@@ -179,8 +176,13 @@ class ShowQuizView(LoginRequiredMixin, View):
                         problem_id = request.POST[problem_id_key]
                         problem = ProblemModel.objects.get(problem_id=problem_id)
                         problem.user_answer = value
+                        if value == problem.correct_answer:  # ユーザーの回答が正しい場合
+                            problem.is_correct = True
+                        else:  # ユーザーの回答が正しくない場合
+                            problem.is_correct = False
                         problem.save()
-                        return redirect('index')
+            return redirect('test', test_id=test_id)
+
        
 # login.html
 class LoginView(View):
