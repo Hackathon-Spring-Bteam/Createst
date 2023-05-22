@@ -5,6 +5,11 @@
   {% csrf_token %}
   {% for problem, choices in problem_choices %}
     <h2>{{ problem.problem_statement }}</h2>
+    {% if problem.is_correct == True %}
+      <p style="color: green;">Correct</p>
+    {% elif problem.is_correct == False %}
+      <p style="color: red;">Incorrect</p>
+    {% endif %}
     <div>
       <!-- Add a hidden input field for the problem ID -->
       <input type="hidden" name="problem_id_{{ forloop.counter }}" value="{{ problem.problem_id }}">
@@ -17,5 +22,9 @@
     </div>
   {% endfor %}
   <button type="submit">回答</button>
+</form>
+<form method="post">
+  {% csrf_token %}
+  <input type="submit" name="regenerate" value="再生成">
 </form>
 {% endblock %}

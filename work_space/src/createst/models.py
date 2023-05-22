@@ -32,6 +32,8 @@ class ProblemModel(models.Model):
     correct_answer = models.CharField(max_length=50)
     user_answer = models.CharField(max_length=50, blank=True, null=True)
     test = models.ForeignKey(TestModel, on_delete=models.CASCADE)
+    #正誤判定機能
+    is_correct = models.BooleanField(default=None, null=True, blank=True)
 
 class ChoiceModel(models.Model):
     choice_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

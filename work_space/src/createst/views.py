@@ -15,14 +15,13 @@ import json
 from django.contrib import messages
 import time
 
-#Index.html
 # Index.html
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "index.html")
 
 #プッシュする際はAPI KEYを必ず空にすること
-openai.api_key = ''
+openai.api_key = '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'
 
 # テストを生成するview
 class CreateTestView(LoginRequiredMixin, TemplateView):
@@ -55,13 +54,11 @@ class CreateTestView(LoginRequiredMixin, TemplateView):
                 test.save()
             
         #難易度のリスト
-        difficulties = ["easy", "normal", "hard", "super_hard", "brainteaser"]
+        difficulties = ["really hard", "normal", "hard", "easy", "brainteaser"]
         
         #難易度をfor文で回してdifficultyに入れる
-        for difficulty in difficulties[:5]:
-            chat_input = f"Generate a {test.test_format}-choice quiz question related to the keyword: {test.test_keyword}. The difficulty of the quiz should be: {difficulty}. Please provide the output in indented JSON format. Please include the correct answer among the 'choices_a' to 'choices_d'. generate 'answer' as the actual choice text, not as 'a'-'d'. If it is a 2-choice quiz, generate 'problem_statement', 'answer', 'choices_a', and 'choices_b' in the indented JSON. If it is a 4-choice quiz, generate 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' in the indented JSON. Ensure that the choices do not overlap and the problem is neither too easy nor inaccurate."
-            
-            #APIの設定
+        for difficulty in difficulties[:1]:
+            chat_input = f"Generate a {test.test_format}-choice quiz question in 日本語 about the keyword: {test.test_keyword}. The quiz should be academically challenging and difficulty: {difficulties}, avoid simple 'What is ~?' type questions. Please provide the output in indented JSON format. Include the correct answer among the 'choices_a' to 'choices_d' and specify 'answer' as the actual choice text, not as 'a'-'d'. For a 2-choice quiz, generate 'problem_statement', 'answer', 'choices_a', and 'choices_b' in the indented JSON. For a 4-choice quiz, generate 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' in the indented JSON."
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
@@ -69,7 +66,7 @@ class CreateTestView(LoginRequiredMixin, TemplateView):
                 ],
                 max_tokens=500,
                 n=1,
-                temperature=0.3,
+                temperature=0.2,
             )
             #APIからのリスポンスを解析
             response_text = response['choices'][0]['message']['content'].strip()
@@ -111,23 +108,82 @@ class ShowQuizView(LoginRequiredMixin, View):
         for problem in problems:
             choices = ChoiceModel.objects.filter(problem=problem)
             problem_choices.append((problem, choices))
-        
-        #debug用
+
+        # debug用
         response_text = request.session.get('response_text', None)
         return render(request, "test.html", {"problem_choices": problem_choices, "response_text": response_text}) #response_textはdebug用
 
-    #ユーザーの答えをDBに保存するコード
-    def post(self, request, *args, **kwargs):
-        for key, value in request.POST.items():
-            if key.startswith('user_answer_'):
-                problem_id_key = 'problem_id_' + key.split('_')[-1]
-                if problem_id_key in request.POST:
-                    problem_id = request.POST[problem_id_key]
-                    problem = ProblemModel.objects.get(problem_id=problem_id)
-                    problem.user_answer = value
-                    problem.save()
-        return redirect('index')
+    #　テストの再生成 & 問題の回答をDBに保存する
+    def post(self, request, test_id):
+        if 'regenerate' in request.POST:
+            old_test = TestModel.objects.get(test_id=test_id)
             
+            # 新しいテストを作る際に生成済みのテストから、要素を取り出す
+            new_test = TestModel.objects.create(test_format=old_test.test_format, test_keyword=old_test.test_keyword, user=request.user, label_id = old_test.label_id)
+
+            #難易度のリスト
+            difficulties = ["easy", "normal", "hard", "super_hard", "brainteaser"]
+            
+            #難易度をfor文で回してdifficultyに入れる
+            for difficulty in difficulties[:2]:
+                chat_input = f"Generate a {new_test.test_format}-choice quiz question in 日本語 about the keyword: {new_test.test_keyword}. The quiz should be academically challenging and difficulty: {difficulties}, avoid simple 'What is ~?' type questions. Please provide the output in indented JSON format. Include the correct answer among the 'choices_a' to 'choices_d' and specify 'answer' as the actual choice text, not as 'a'-'d'. For a 2-choice quiz, generate 'problem_statement', 'answer', 'choices_a', and 'choices_b' in the indented JSON. For a 4-choice quiz, generate 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' in the indented JSON."
+                
+                #APIの設定
+                response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": chat_input}
+                    ],
+                    max_tokens=500,
+                    n=1,
+                    temperature=0.3,
+                )
+                #APIからのリスポンスを解析
+                response_text = response['choices'][0]['message']['content'].strip()
+                
+                #うまくJSONを取得できなかった時の例外処理
+                try:
+                    response_json = json.loads(response_text)
+                except json.JSONDecodeError:
+                    messages.error(request, f'エラーが発生しました。キーワードを正確に入力してください。Response: {response_text}')
+                    return render(request, "create.html", {"form": form, "response_text": response_text})
+                
+                #以下DBに保存するコード
+                problem_statement = response_json["problem_statement"]
+                correct_answer = response_json["answer"]
+                choices_a = response_json["choices_a"]
+                choices_b = response_json["choices_b"]
+
+                problem = ProblemModel.objects.create(problem_statement=problem_statement, correct_answer=correct_answer, test=new_test)
+                ChoiceModel.objects.create(choice=choices_a, problem=problem)
+                ChoiceModel.objects.create(choice=choices_b, problem=problem)
+
+                if new_test.test_format == 4:
+                    choices_c = response_json["choices_c"]
+                    choices_d = response_json["choices_d"]
+                    ChoiceModel.objects.create(choice=choices_c, problem=problem)
+                    ChoiceModel.objects.create(choice=choices_d, problem=problem)
+
+            # 新しいtest_idのページに遷移
+            return redirect('test', test_id=new_test.test_id)
+        
+        # 再生成が選択されなかったときにユーザーの回答をDBに保存 & 得点を記録
+        else:
+            for key, value in request.POST.items():
+                if key.startswith('user_answer_'):
+                    problem_id_key = 'problem_id_' + key.split('_')[-1]
+                    if problem_id_key in request.POST:
+                        problem_id = request.POST[problem_id_key]
+                        problem = ProblemModel.objects.get(problem_id=problem_id)
+                        problem.user_answer = value
+                        if value == problem.correct_answer:  # ユーザーの回答が正しい場合
+                            problem.is_correct = True
+                        else:  # ユーザーの回答が正しくない場合
+                            problem.is_correct = False
+                        problem.save()
+            return redirect('test', test_id=test_id)
+
+       
 # login.html
 class LoginView(View):
     def get(self, request):
