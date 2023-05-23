@@ -15,5 +15,4 @@ urlpatterns = [
     path('emailup/',ChangeEmailView.as_view(),name='emailup'),
     path('passwordup/',ChangePasswordView.as_view(), name='passwordup'),
     path('test/', IndexTestView, name='index'),
-
 ]
