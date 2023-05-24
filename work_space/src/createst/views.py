@@ -18,7 +18,7 @@ class IndexView(LoginRequiredMixin, View):
         return render(request, "index.html")
 
 #プッシュする際はAPI KEYを必ず空にすること
-openai.api_key = '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'
+openai.api_key = ''
 
 # テストを生成するview
 class CreateTestView(LoginRequiredMixin, TemplateView):
