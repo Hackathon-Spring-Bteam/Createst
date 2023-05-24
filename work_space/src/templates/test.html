@@ -3,6 +3,7 @@
 {% block content %}
 <form method="post">
   {% csrf_token %}
+  <p>Score: {{ score }}</p>
   {% for problem, choices in problem_choices %}
     <h2>{{ problem.problem_statement }}</h2>
     {% if problem.is_correct == True %}
@@ -15,7 +16,7 @@
       <input type="hidden" name="problem_id_{{ forloop.counter }}" value="{{ problem.problem_id }}">
       {% for choice in choices %}
         <div>
-          <input type="radio" name="user_answer_{{ forloop.parentloop.counter }}" id="choice_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" value="{{ choice.choice }}" required>
+          <input type="radio" name="user_answer_{{ forloop.parentloop.counter }}" id="choice_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" value="{{ choice.choice }}">
           <label for="choice_{{ forloop.parentloop.counter }}_{{ forloop.counter }}">{{ choice.choice }}</label>
         </div>
       {% endfor %}
