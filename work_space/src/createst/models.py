@@ -24,7 +24,7 @@ class TestModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     public_key = models.BooleanField(default=True)
     label = models.ForeignKey(LabelModel, on_delete=models.CASCADE)
-
+    score = models.CharField(max_length=50, default="0/3")
 
 class ProblemModel(models.Model):
     problem_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
