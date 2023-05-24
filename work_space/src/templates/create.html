@@ -1,15 +1,24 @@
-{% extends "base.html" %}
-
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/modal.css' %}" />
+<link rel="stylesheet" href="{% static 'css/create.css' %}" />
+{% endblock %}
 {% block content %}
-<h2>テストを作成</h2>
+{% include "header.html" %}
+<div class="content">
+  <img class="create" src="{% static 'img/create.png' %}">
+  <h2 id="title">タイトル</h2>
+  <h2 id="label">ラベル</h2>
+  <h2 id="forme">形式</h2>
+  <h2 id="keyword">キーワード</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="hidden" name="form_type" value="test_form">
-    <button type="submit">作成</button>
+    <button type="submit" class="createbtn">作成</button>
 </form>
-
-<h2>ラベルを追加</h2>
+<div class="modal">
 <form method="post">
     {% csrf_token %}
     {{ label_form.as_p }}
@@ -22,6 +31,10 @@
     <div class="response-text">
         <h3>ChatGPT Response:</h3>
         <pre>{{ response_text }}</pre>
-    </div>
+      </div>
+   
   {% endif %}
+    </div>
+</div>
+<img id="footer" src="{% static 'img/chalk_rail.png' %}">
 {% endblock %}
