@@ -13,7 +13,6 @@ import json
 from django.contrib import messages
 import time
 from django.views.generic import ListView
-
 # Index.html
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
