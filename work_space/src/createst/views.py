@@ -13,11 +13,6 @@ import json
 from django.contrib import messages
 import time
 from django.views.generic import ListView
-# Index.html
-class IndexView(LoginRequiredMixin, View):
-    def get(self, request):
-        return render(request, "index.html")
-
 #プッシュする際はAPI KEYを必ず空にすること
 openai.api_key = ""
 
@@ -280,7 +275,7 @@ class ChangePasswordView(LoginRequiredMixin,View):
         return render(request, self.template_name, {'form': form})
     
 
-class TestListView(ListView):
+class TestListView(LoginRequiredMixin,ListView):
     model = TestModel
     template_name = 'index.html'
     context_object_name = 'test_list'

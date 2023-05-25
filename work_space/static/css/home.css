@@ -29,7 +29,7 @@ body {
 }
 .box {
   box-sizing: border-box;
-  width: 582px;
+  width: 500px;
   height: 42px;
   background: #FFFFFF;
   border: 1px solid #666666;
