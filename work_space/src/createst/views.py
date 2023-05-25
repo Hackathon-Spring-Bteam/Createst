@@ -14,6 +14,7 @@ from django.views.generic import TemplateView
 import json
 from django.contrib import messages
 import time
+from django.views.generic import ListView
 
 # Index.html
 class IndexView(LoginRequiredMixin, View):
@@ -21,7 +22,7 @@ class IndexView(LoginRequiredMixin, View):
         return render(request, "index.html")
 
 #プッシュする際はAPI KEYを必ず空にすること
-openai.api_key = ''
+openai.api_key = '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'
 
 # テストを生成するview
 class CreateTestView(LoginRequiredMixin, TemplateView):
@@ -278,3 +279,13 @@ class ChangePasswordView(LoginRequiredMixin,View):
             messages.success(request, 'パスワードを変更しました。')
             return redirect('/index/')
         return render(request, self.template_name, {'form': form})
+    
+
+class TestListView(ListView):
+    model = TestModel
+    template_name = 'index.html'
+    context_object_name = 'test_list'
+
+    def get_queryset(self):
+        # ログインしているユーザーに紐づいたテストモデルを取得
+        return TestModel.objects.filter(user=self.request.user)
