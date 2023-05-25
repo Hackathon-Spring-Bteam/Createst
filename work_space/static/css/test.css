@@ -1,0 +1,114 @@
+body {
+  background-color: #365835;
+  color: #666666;
+}
+
+#footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.test {
+  height: 35px;
+  left: 181px;
+  top: 106px;
+}
+
+h2 {
+  font-family: 'Piazzolla';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 23px;
+
+  color: #666666;
+  padding: 10px;
+}
+
+.content {
+  position: relative;
+  width: 700px;
+  margin: 0 auto;
+  /* 中央寄せ */
+  top: 30px;
+  height: 420px;
+  background-color: white;
+  box-shadow: 0px 0px 30px rgba(200, 200, 200, 0.4);
+  border-radius: 10px;
+  padding: 3%;
+}
+
+.q {
+  overflow-y: scroll;
+  height: 300px;
+}
+
+input [type="radio"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3em 2em;
+  border: none;
+}
+
+input[type="radio"] {
+  -webkit-appearance: radio;
+  /* Safari, Chrome, Edge */
+  appearance: radio;
+  /* Firefox */
+}
+
+.ansbtn {
+  position: absolute;
+  color: #FFFFFF;
+  width: 200px;
+  height: 80px;
+  left: 740px;
+  top: 300px;
+  font-family: 'Piazzolla';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 34px;
+
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+  border: 1px solid #FFFFFF;
+  border-radius: 90px;
+}
+
+.ansbtn:hover {
+  color: #365835;
+  background-color: #ffffff;
+}
+.recreatebtn {
+  position: absolute;
+  color: #FFFFFF;
+  width: 200px;
+  height: 80px;
+  left: 740px;
+  top: 200px;
+  font-family: 'Piazzolla';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 34px;
+
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+  border: 1px solid #FFFFFF;
+  border-radius: 90px;
+}
+
+.recreatebtn:hover {
+  color: #365835;
+  background-color: #ffffff;
+}
+.options{
+padding: 0px 0px 0px 20px;
+}
+.score{
+  font-size: 20px;
+}
