@@ -15,7 +15,7 @@ import time
 from django.views.generic import ListView
 <<<<<<< HEAD
 =======
-
+from django.views.generic import ListView
 >>>>>>> bef8bb8 (一覧画面作成)
 # Index.html
 class IndexView(LoginRequiredMixin, View):
