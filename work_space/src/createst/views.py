@@ -13,13 +13,14 @@ import json
 from django.contrib import messages
 import time
 from django.views.generic import ListView
+
 # Index.html
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "index.html")
 
 #プッシュする際はAPI KEYを必ず空にすること
-openai.api_key = ''
+openai.api_key = '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'
 
 # テストを生成するview
 class CreateTestView(LoginRequiredMixin, TemplateView):
