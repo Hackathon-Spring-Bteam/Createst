@@ -11,7 +11,8 @@ import openai
 from django.views.generic import TemplateView
 import json
 from django.contrib import messages
-
+import time
+from django.views.generic import ListView
 # Index.html
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
@@ -277,3 +278,13 @@ class ChangePasswordView(LoginRequiredMixin,View):
             messages.success(request, 'パスワードを変更しました。')
             return redirect('/index/')
         return render(request, self.template_name, {'form': form})
+    
+
+class TestListView(ListView):
+    model = TestModel
+    template_name = 'index.html'
+    context_object_name = 'test_list'
+
+    def get_queryset(self):
+        # ログインしているユーザーに紐づいたテストモデルを取得
+        return TestModel.objects.filter(user=self.request.user)

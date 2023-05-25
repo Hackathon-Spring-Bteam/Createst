@@ -1,3 +1,22 @@
-<html>
-    <h1>index_page</h1>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" />
+{% endblock %}
+{% block content %}
+{% include "header.html" %}
+<div class="content">
+  <img class="home" src="{% static 'img/home.png' %}">
+  <ul>
+    {% for test in test_list %}
+    <div class="bbox">
+      <a class="class_test_title" href="{% url 'test' test.test_id %}">
+        <div class="box">{{ test.test_title }}</div>
+      </a>
+    </div>
+
+    {% endfor %}
+  </ul>
+</div>
+<img id="footer" src="{% static 'img/chalk_rail.png' %}">
+{% endblock content %}
