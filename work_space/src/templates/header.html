@@ -2,10 +2,12 @@
 <link rel="stylesheet" href="{% static 'css/header.css' %}" />
 <link rel="stylesheet" href="{% static 'css/reset.css' %}" />
 <header>
-  <div class="logo">
-    <a  href="{% url 'login'%}"><img src="{% static 'img/logo.png' %}"></a>
-  </div>
-
+  <span class="logo">
+    <a  href="{% url 'index'%}"><img src="{% static 'img/logo.png' %}"></a>
+  </span>
+  <span class="headercreatest">
+    <a  href="{% url 'create'%}"><img src="{% static 'img/createst.png' %}"></a>
+  </span>
 </header>
   <div class="topbar"></div>
     <div class="left-bar"></div>
