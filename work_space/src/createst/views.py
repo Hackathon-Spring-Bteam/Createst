@@ -14,7 +14,7 @@ from django.contrib import messages
 import time
 from django.views.generic import ListView
 #プッシュする際はAPI KEYを必ず空にすること
-openai.api_key = ""
+openai.api_key = "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 "
 
 # テストを生成するview
 class CreateTestView(LoginRequiredMixin, TemplateView):
@@ -117,7 +117,7 @@ class ShowQuizView(LoginRequiredMixin, View):
 
             #難易度をfor文で回してdifficultyに入れる
             for difficulty in difficulties[:3]:
-                chat_input = f"grt qz based on kwd: {test.test_keyword}. qz must be academically challenging. difficulty: {difficulties}. inc correct ans amg 'choices_a' to 'choices_d'. 'answer' as the actual choice txt. For 2-ch quiz, grt 'problem_statement', 'answer', 'choices_a', and 'choices_b' in the indented JSON. For 4-ch quiz, grt 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' in the indented JSON."
+                chat_input = f"grt qz based on kwd: {new_test.test_keyword}. qz must be academically challenging. difficulty: {difficulties}. inc correct ans amg 'choices_a' to 'choices_d'. 'answer' as the actual choice txt. For 2-ch quiz, grt 'problem_statement', 'answer', 'choices_a', and 'choices_b' in the indented JSON. For 4-ch quiz, grt 'problem_statement', 'answer', 'choices_a', 'choices_b', 'choices_c', and 'choices_d' in the indented JSON."
 
                 #APIの設定
                 response = openai.ChatCompletion.create(

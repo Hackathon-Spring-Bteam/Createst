@@ -76,6 +76,7 @@ input[type="radio"] {
   box-sizing: border-box;
   border: 1px solid #FFFFFF;
   border-radius: 90px;
+  cursor: pointer;
 }
 
 .ansbtn:hover {
@@ -100,6 +101,7 @@ input[type="radio"] {
   box-sizing: border-box;
   border: 1px solid #FFFFFF;
   border-radius: 90px;
+  cursor: pointer;
 }
 
 .recreatebtn:hover {
@@ -108,6 +110,7 @@ input[type="radio"] {
 }
 .options{
 padding: 0px 0px 0px 20px;
+cursor: pointer;
 }
 .score{
   font-size: 20px;
