@@ -3,6 +3,7 @@
 {% block header %}
 <link rel="stylesheet" href="{% static 'css/modal.css' %}" />
 <link rel="stylesheet" href="{% static 'css/create.css' %}" />
+
 {% endblock %}
 {% block content %}
 {% include "header.html" %}
@@ -12,29 +13,51 @@
   <h2 id="label">ラベル</h2>
   <h2 id="forme">形式</h2>
   <h2 id="keyword">キーワード</h2>
-<form method="post">
+  <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="hidden" name="form_type" value="test_form">
     <button type="submit" class="createbtn">作成</button>
-</form>
-<div class="modal">
-<form method="post">
-    {% csrf_token %}
-    {{ label_form.as_p }}
-    <input type="hidden" name="form_type" value="label_form">
-    <button type="submit">追加</button>
-</form>
-
-
-  {% if response_text %}
-    <div class="response-text">
-        <h3>ChatGPT Response:</h3>
-        <pre>{{ response_text }}</pre>
-      </div>
-   
-  {% endif %}
+  </form>
+  <div class="btnborder">
+    <button id="showModalBtn" type="button">+</button>
+  </div>
+  <div id="addLabelModal" class="modal">
+    <div class="modal-contents">
+      <img class="create" src="{% static 'img/label.png' %}">
+      <h2 id="label">新しいラベル名</h2>
+      <form id="addLabelForm" method="post">
+        {% csrf_token %}
+        {{ label_form.as_p }}
+        <input type="hidden" name="form_type" value="label_form">
+        <button type="submit" class="addbtn">追加</button>
+      </form>
     </div>
+  </div>
 </div>
+
 <img id="footer" src="{% static 'img/chalk_rail.png' %}">
+<script>
+  // モーダルを表示するためのボタンのクリックイベントリスナーを追加
+  document.getElementById("showModalBtn").addEventListener("click", function () {
+    showModal();
+  });
+
+  // モーダルを非表示にするためのボタンのクリックイベントリスナーを追加
+  document.getElementById("closeModalBtn").addEventListener("click", function () {
+    hideModal();
+  });
+
+  // モーダルを表示する関数
+  function showModal() {
+    var modal = document.getElementById("addLabelModal");
+    modal.style.display = "block";
+  }
+
+  // モーダルを非表示にする関数
+  function hideModal() {
+    var modal = document.getElementById("addLabelModal");
+    modal.style.display = "none";
+  }
+</script>
 {% endblock %}
