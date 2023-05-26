@@ -320,3 +320,11 @@ input[type="radio"] {
   top: 170px;
   width: 280px;
 }
+
+#closemodal{
+  position: relative;
+  color: #000;
+  font-size: 24px;
+  top: -30px;
+  left:440px
+}

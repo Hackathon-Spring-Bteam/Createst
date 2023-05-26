@@ -25,6 +25,7 @@
   <div id="addLabelModal" class="modal">
     <div class="modal-contents">
       <img class="create" src="{% static 'img/label.png' %}">
+      <a id="closemodal" href="{% url 'create'%}">×</a>
       <h2 id="label">新しいラベル名</h2>
       <form id="addLabelForm" method="post">
         {% csrf_token %}
