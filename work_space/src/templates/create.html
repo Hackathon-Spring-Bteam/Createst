@@ -17,17 +17,22 @@
     {% csrf_token %}
     {{ form.as_p }}
     <input type="hidden" name="form_type" value="test_form">
-    <button type="submit" >作成</button>
+    <button type="submit" class="createbtn">作成</button>
   </form>
-  <button id="showModalBtn" type="button" class="createbtn">モーダルを表示</button>
-
+  <div class="btnborder">
+    <button id="showModalBtn" type="button">+</button>
+  </div>
   <div id="addLabelModal" class="modal">
-    <form id="addLabelForm" method="post">
-      {% csrf_token %}
-      {{ label_form.as_p }}
-      <input type="hidden" name="form_type" value="label_form">
-      <button type="submit">追加</button>
-    </form>
+    <div class="modal-contents">
+      <img class="create" src="{% static 'img/label.png' %}">
+      <h2 id="label">新しいラベル名</h2>
+      <form id="addLabelForm" method="post">
+        {% csrf_token %}
+        {{ label_form.as_p }}
+        <input type="hidden" name="form_type" value="label_form">
+        <button type="submit" class="addbtn">追加</button>
+      </form>
+    </div>
   </div>
 </div>
 

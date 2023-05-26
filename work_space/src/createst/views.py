@@ -14,7 +14,7 @@ from django.contrib import messages
 import time
 from django.views.generic import ListView
 #プッシュする際はAPI KEYを必ず空にすること
-openai.api_key = "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 "
+openai.api_key = ""
 
 # テストを生成するview
 class CreateTestView(LoginRequiredMixin, TemplateView):
