@@ -244,3 +244,10 @@ input[type="radio"] {
   border: 1px solid #FFFFFF;
   padding:20px 5px 0px 5px;
 }
+.twitter{
+  position: relative;
+  top:-50px;
+  left: 280px;
+  width: 50px;
+  height: auto;
+}
