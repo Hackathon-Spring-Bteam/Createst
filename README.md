@@ -5,34 +5,34 @@
 > テストを簡単に生成できることで学習の効率を高める.
 
 
-# 使用技術 <!--　必要であればver等追記してください -->
-- Python
-- django
-- docker
-- MySQL
-- NGINX
-- HTML,CSS,javascript
+## 使用技術 <!--　必要であればver等追記してください -->
+> Python
+> django
+> docker
+> MySQL
+> NGINX
+> HTML,CSS,javascript
 
-# 開発ツール
-- Figma
-- git
-- GitHub
-- Miro
-- Visual Studio Code
-- discord
+## 開発ツール
+> Figma
+> git
+> GitHub
+> Miro
+> Visual Studio Code
+> discord
 
-# 主な実装した機能一覧
+## 主な実装した機能一覧
 
-- ログイン機能
-- テスト作成機能
-- テスト再生成機能
-- テスト表示機能
-- テスト回答機能
-- テスト採点機能
+> ログイン機能
+> テスト作成機能
+> テスト再生成機能
+> テスト表示機能
+> テスト回答機能
+> テスト採点機能
 
-# 開発期間
-
+## 開発期間
 約2ヶ月
 
 毎日コアタイムを設定し開発に取り組んだ
-
+##開発人数
+３名
